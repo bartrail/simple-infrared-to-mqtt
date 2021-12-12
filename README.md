@@ -16,9 +16,27 @@ Requirements: `Node 16`
 
 copy `config.json.dist` to `config.json` and set up
 
-- your GPIO Port where the IR Module is connected (typically from `D0` on the IR module to the desired GPIO)
-- MQTT Host Address
-- MQTT Topic
+- `gpio` your GPIO Port where the IR Module is connected (typically from `D0` on the IR module to the desired GPIO)
+- `interval` the interval in seconds how often the GPIO is scanned
+- `mqtt` 
+  - `mqtt.host` Host Address  
+  - `mqtt.topic` Topic for mqtt
+  - `mqtt.message` Message translation (GPIO values are `"0"` or `"1"` that can be translated to the given string ("open"/"closed" by default))
+
+```json
+{
+    "gpio": 4,
+    "interval": 5,
+    "mqtt": {
+        "host": "mqtt://192.168.178.54:1883",
+        "topic": "/home/garage-door/status",
+        "message": {
+            "0": "closed",
+            "1": "open"
+        }
+    }
+}
+```
 
 More information on how to connect the IR Sensor to the Raspberry Pi:
 https://www.uugear.com/portfolio/using-light-sensor-module-with-raspberry-pi/
