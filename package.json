@@ -1,0 +1,29 @@
+{
+  "name": "simple-infrared-to-mqtt",
+  "version": "1.0.0",
+  "description": "infrared detector that sends it's status to an mqtt broker",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bartrail/simple-infrared-to-mqtt.git"
+  },
+  "keywords": [
+    "raspberry-pi",
+    "mqtt",
+    "infrared",
+    "nodejs"
+  ],
+  "author": "Conrad Barthelmes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bartrail/simple-infrared-to-mqtt/issues"
+  },
+  "homepage": "https://github.com/bartrail/simple-infrared-to-mqtt#readme",
+  "dependencies": {
+    "onoff": "^6.0.3"
+  }
+}
