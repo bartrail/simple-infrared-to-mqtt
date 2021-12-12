@@ -1,7 +1,7 @@
 {
-  GPIO_IR: 4,
-  MQTT: {
-    host: "mqtt://192.168.178.54:1883",
-    address: "/home/garage-door/status"
+  "GPIO_IR": 4,
+  "MQTT": {
+    "host": "mqtt://192.168.178.54:1883",
+    "topic": "/home/garage-door/status"
   }
 }
