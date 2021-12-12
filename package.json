@@ -1,11 +1,12 @@
 {
   "name": "simple-infrared-to-mqtt",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "infrared detector that sends it's status to an mqtt broker",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "run": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "app": "node app.js",
+    "check-format": "npx prettier --check .",
+    "format": "npx prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,11 @@
   },
   "homepage": "https://github.com/bartrail/simple-infrared-to-mqtt#readme",
   "dependencies": {
+    "async-mqtt": "^2.6.1",
+    "mqtt": "^4.2.8",
     "onoff": "^6.0.3"
+  },
+  "devDependencies": {
+    "prettier": "2.5.1"
   }
 }
