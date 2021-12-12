@@ -1,12 +1,12 @@
 {
     "gpio": 4,
-    "interval" : 5,
-    "message" : {
-        "0" : "closed",
-        "1" : "open"
-    },
+    "interval": 5,
     "mqtt": {
         "host": "mqtt://192.168.178.54:1883",
-        "topic": "/home/garage-door/status"
+        "topic": "/home/garage-door/status",
+        "message": {
+            "0": "closed",
+            "1": "open"
+        }
     }
 }

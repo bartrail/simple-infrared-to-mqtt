@@ -7,7 +7,7 @@ Raspberry Pi infrared detector that sends it's status to an mqtt broker
 Requirements: `Node 16`
 
 -   `git clone https://github.com/bartrail/simple-infrared-to-mqtt.git`
--   cd `simple-infrared-to-mqtt`
+-   `cd simple-infrared-to-mqtt`
 -   `npm install`
 -   `npm run build`
 -   `npm run app`
@@ -25,9 +25,25 @@ https://www.uugear.com/portfolio/using-light-sensor-module-with-raspberry-pi/
 
 ## Compile & Run
 
--   run `npm run dev` for local testing
--   run `npm build`
--   run `npm run app`
+- run `npm run dev` for local testing
+- run `npm build`
+- run `npm run app`
+
+## Autostart
+
+To run this little app at the autostart of your system:
+- run `sudo cp simple-infrared-to-mqtt.service /lib/systemd/system/simple-infrared-to-mqtt.service` to copy the systemctl config file to the correct directory
+- open it with `sudo nano /lib/systemd/system/simple-infrared-to-mqtt.service` and adjust the path at the line that 
+  starts with `ExecStart=` to fit your local installation directory of the project. Default is in `/home/pi/`
+- tell systemctl that there is a new service in town 
+  - `sudo systemctl daemon-reload`
+  - `sudo systemctl enable simple-infrared-to-mqtt`
+- start the service manually `sudo systemctl start simple-infrared-to-mqtt`
+- try it by rebooting your pi and watch the MQTT messages to ensure it is running.
+
+To stop the service manually, type `sudo systemctl stop simple-infrared-to-mqtt`
+
+More details for systemd and nodejs can be found here: https://nodesource.com/blog/running-your-node-js-app-with-systemd-part-1/
 
 ## Troubleshooting
 

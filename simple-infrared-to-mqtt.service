@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple Infrared to MQTT Service
+Documentation=https://github.com/bartrail/simple-infrared-to-mqtt
+After=network-online.target
+
+[Service]
+Type=idle
+User=pi
+ExecStart=/usr/local/bin/node /home/pi/simple-infrared-to-mqtt/dist/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
