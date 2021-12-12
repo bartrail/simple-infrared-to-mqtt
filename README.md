@@ -64,4 +64,13 @@ and added this line to my `~/.bashrc`
 export PATH=$PATH:/opt/nodejs/bin
 ```
 
-##
+## Used Libraries:
+
+- OnOff https://github.com/fivdi/onoff
+- MQTT https://github.com/mqttjs/MQTT.js
+- Async MQTT https://github.com/mqttjs/async-mqtt
+
+### For Development:
+
+- Typescript https://github.com/microsoft/TypeScript
+- Prettier https://github.com/prettier/prettier
