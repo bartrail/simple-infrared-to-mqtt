@@ -7,7 +7,7 @@ if (!Gpio.accessible) {
     throw new Error('GPIO is unaccessible - are you running on a Raspberry PI?');
 }
 
-async function App(config: any) {
+async function App(config: Config) {
     const mqttClient = new MqttClient(config.mqtt.host, config.mqtt.topic);
     const irDetector = new Gpio(config.gpio, 'in', 'rising', { debounceTimeout: 10 });
 
@@ -25,7 +25,11 @@ async function App(config: any) {
 
     setInterval(() => {
         irDetector.read(readGpio);
-    }, config.interval * 1000);
+    }, config.status_interval * 1000);
+
+    setInterval(() => {
+        mqttClient.publish('running');
+    }, config.liveness_interval * 1000)
 }
 
 export default App;

@@ -1,6 +1,7 @@
 {
     "gpio": 4,
-    "interval": 5,
+    "status_interval" : 10,
+    "liveness_intervall" : 60,
     "mqtt": {
         "host": "mqtt://192.168.178.54:1883",
         "topic": "/home/garage-door/status",
