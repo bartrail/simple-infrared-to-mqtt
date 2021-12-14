@@ -1,11 +1,14 @@
 class Message {
-    static toMqtt(value: any, config: any): string {
+    static toMqtt(value: any, config: Config): string {
         const valueAsStr = value.toString();
-        if (config.mqtt.hasOwnProperty('message') === false) {
+        if (config.mqtt.status.hasOwnProperty('message') === false) {
             return valueAsStr;
         }
 
-        return config.mqtt.message[value];
+        const message = config.mqtt.status.message;
+
+        // @ts-ignore
+        return message[valueAsStr];
     }
 }
 

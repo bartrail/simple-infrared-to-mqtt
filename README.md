@@ -16,23 +16,39 @@ Requirements: `Node 16`
 
 copy `config.json.dist` to `config.json` and set up
 
-- `gpio` your GPIO Port where the IR Module is connected (typically from `D0` on the IR module to the desired GPIO)
-- `interval` the interval in seconds how often the GPIO is scanned
-- `mqtt` 
-  - `mqtt.host` Host Address  
-  - `mqtt.topic` Topic for mqtt
-  - `mqtt.message` Message translation (GPIO values are `"0"` or `"1"` that can be translated to the given string ("open"/"closed" by default))
+-   `gpio` your GPIO Port where the IR Module is connected (typically from `D0` on the IR module to the desired GPIO)
+-   `scan_interval` the interval in seconds how often the GPIO is scanned
+-   `mqtt` MQTT settings
+
+    -   `mqtt.host` Host Address
+    -   `mqtt.status` Settings for the status message
+        -   `mqtt.status.topic` Topic for mqtt status
+        -   `mqtt.status.message` Message translation (GPIO values are `"0"` or `"1"` that can be translated to the given string ("open"/"closed" by default))
+    -   `mqtt.liveness` Settings for a liveness request where simple-infrared-to-mqtt is listening to
+
+        -   `mqtt.liveness.topic` The topic that it is listening to
+        -   `mqtt.liveness.requestPayload` the payload of the liveness topic that it will listen to
+        -   `mqtt.liveness.responsePayload` the answer for this liveness request.
+
+            **Attention** Avoid using the same payload for request and response or you will have endless loops!
 
 ```json
 {
     "gpio": 4,
-    "interval": 5,
+    "scan_interval": 2,
     "mqtt": {
         "host": "mqtt://192.168.178.54:1883",
-        "topic": "/home/garage-door/status",
-        "message": {
-            "0": "closed",
-            "1": "open"
+        "status": {
+            "topic": "/home/garage-door/status",
+            "message": {
+                "0": "closed",
+                "1": "open"
+            }
+        },
+        "liveness": {
+            "topic": "/home/garage-door/liveness",
+            "requestPayload": "ping",
+            "responsePayload": "pong"
         }
     }
 }
@@ -43,21 +59,22 @@ https://www.uugear.com/portfolio/using-light-sensor-module-with-raspberry-pi/
 
 ## Compile & Run
 
-- run `npm run dev` for local testing
-- run `npm build`
-- run `npm run app`
+-   run `npm run dev` for local testing
+-   run `npm build`
+-   run `npm run app`
 
 ## Autostart
 
 To run this little app at the autostart of your system:
-- run `sudo cp simple-infrared-to-mqtt.service /lib/systemd/system/simple-infrared-to-mqtt.service` to copy the systemctl config file to the correct directory
-- open it with `sudo nano /lib/systemd/system/simple-infrared-to-mqtt.service` and adjust the path at the line that 
-  starts with `ExecStart=` to fit your local installation directory of the project. Default is in `/home/pi/`
-- tell systemctl that there is a new service in town 
-  - `sudo systemctl daemon-reload`
-  - `sudo systemctl enable simple-infrared-to-mqtt`
-- start the service manually `sudo systemctl start simple-infrared-to-mqtt`
-- try it by rebooting your pi and watch the MQTT messages to ensure it is running.
+
+-   run `sudo cp simple-infrared-to-mqtt.service /lib/systemd/system/simple-infrared-to-mqtt.service` to copy the systemctl config file to the correct directory
+-   open it with `sudo nano /lib/systemd/system/simple-infrared-to-mqtt.service` and adjust the path at the line that
+    starts with `ExecStart=` to fit your local installation directory of the project. Default is in `/home/pi/`
+-   tell systemctl that there is a new service in town
+    -   `sudo systemctl daemon-reload`
+    -   `sudo systemctl enable simple-infrared-to-mqtt`
+-   start the service manually `sudo systemctl start simple-infrared-to-mqtt`
+-   try it by rebooting your pi and watch the MQTT messages to ensure it is running.
 
 To stop the service manually, type `sudo systemctl stop simple-infrared-to-mqtt`
 
@@ -84,11 +101,11 @@ export PATH=$PATH:/opt/nodejs/bin
 
 ## Used Libraries:
 
-- OnOff https://github.com/fivdi/onoff
-- MQTT https://github.com/mqttjs/MQTT.js
-- Async MQTT https://github.com/mqttjs/async-mqtt
+-   OnOff https://github.com/fivdi/onoff
+-   MQTT https://github.com/mqttjs/MQTT.js
+-   Async MQTT https://github.com/mqttjs/async-mqtt
 
 ### For Development:
 
-- Typescript https://github.com/microsoft/TypeScript
-- Prettier https://github.com/prettier/prettier
+-   Typescript https://github.com/microsoft/TypeScript
+-   Prettier https://github.com/prettier/prettier

@@ -2,17 +2,20 @@ import MqttClient from './MqttClient';
 
 import { Gpio } from 'onoff';
 import Message from './Message';
+import { ISubscriptionGrant } from 'mqtt/types/lib/client';
 
 if (!Gpio.accessible) {
     throw new Error('GPIO is unaccessible - are you running on a Raspberry PI?');
 }
 
 async function App(config: Config) {
-    const mqttClient = new MqttClient(config.mqtt.host, config.mqtt.topic);
     const irDetector = new Gpio(config.gpio, 'in', 'rising', { debounceTimeout: 10 });
 
-    await mqttClient.connect();
-    await mqttClient.publish('running');
+    const mqttClientStatus = new MqttClient(config.mqtt.host, config.mqtt.status.topic);
+    await mqttClientStatus.connect();
+
+    const mqttClientLiveness = new MqttClient(config.mqtt.host, config.mqtt.liveness.topic);
+    await mqttClientLiveness.connect();
 
     const readGpio = async (err: any, value: any) => {
         if (err) {
@@ -20,16 +23,25 @@ async function App(config: Config) {
             return;
         }
 
-        await mqttClient.publish(Message.toMqtt(value, config));
+        await mqttClientStatus.publish(Message.toMqtt(value, config));
+    };
+
+    const onLivenessRequest = (topic: string, message: string) => {
+        if (topic !== config.mqtt.liveness.topic) {
+            return;
+        }
+        if (message !== config.mqtt.liveness.requestPayload) {
+            return;
+        }
+
+        mqttClientLiveness.publish(config.mqtt.liveness.responsePayload);
     };
 
     setInterval(() => {
         irDetector.read(readGpio);
-    }, config.status_interval * 1000);
+    }, config.scan_interval * 1000);
 
-    setInterval(() => {
-        mqttClient.publish('running');
-    }, config.liveness_interval * 1000)
+    mqttClientLiveness.subscribe(onLivenessRequest);
 }
 
 export default App;

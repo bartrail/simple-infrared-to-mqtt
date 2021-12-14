@@ -1,4 +1,5 @@
-import { AsyncClient, AsyncMqttClient, connectAsync } from 'async-mqtt';
+import { AsyncClient, AsyncMqttClient, connectAsync, IPublishPacket } from 'async-mqtt';
+import { ISubscriptionGrant, OnMessageCallback } from 'mqtt/types/lib/client';
 
 class MqttClient {
     private client: AsyncMqttClient | undefined;
@@ -17,17 +18,42 @@ class MqttClient {
         }
     }
 
-    async publish(value: string) {
+    async publish(value: string, topic?: string) {
         if (!this.client || !this.client.connected) {
             console.warn('Client not connected! ');
             return;
         }
+
         try {
-            await this.client.publish(this.topic, value);
-            console.log('Send message [%s/%s]', this.topic, value);
+            const topicToSend = typeof topic === 'string' ? topic : this.topic;
+            await this.client.publish(topicToSend, value);
+            console.log('Send message [%s/%s]', topicToSend, value);
         } catch (e) {
             console.log('Error publish message', e);
         }
+    }
+
+    async subscribe(
+        onMessage: (topic: string, message: string) => void,
+        onSubscriptionRegistered?: (subscription: ISubscriptionGrant) => void,
+        topic?: string,
+    ) {
+        if (!this.client || !this.client.connected) {
+            console.warn('Client not connected! ');
+            return;
+        }
+
+        const topicToSubscribeTo = typeof topic === 'string' ? topic : this.topic;
+        const incomingMessages = await this.client.subscribe(topicToSubscribeTo, { qos: 2 });
+        incomingMessages.map((subscriptionGrant: ISubscriptionGrant) => {
+            if (onSubscriptionRegistered) {
+                onSubscriptionRegistered(subscriptionGrant);
+            }
+        });
+
+        this.client.on('message', function (topic: string, message: Buffer, packet: IPublishPacket) {
+            onMessage(topic, message.toString());
+        });
     }
 }
 
